@@ -50,7 +50,13 @@ Enrolling Participants in events.
 Managing enrolments.
 
 Recording and viewing race results.
+Database
 
+The application uses Microsoft SQL Server Express and Entity Framework Core.
+
+The database is named RaceDayDb. The connection string is configured in appsettings.json.
+
+For security, do not commit passwords, private keys, access tokens, or other sensitive configuration values to the repository.
 API documentation through Swagger.
 
 Automated testing.
