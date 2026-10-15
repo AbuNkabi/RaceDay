@@ -102,3 +102,33 @@ If the database has not yet been created or updated, use the following command f
 dotnet ef database update --project RaceDay.Api --startup-project RaceDay.Api
 
 Ensure the EF Core tools are installed before running this command.
+
+Using Swagger
+
+When the API is running, open the Swagger UI at the address displayed in the application's launch settings or console output.
+
+Swagger allows users to inspect available endpoints, view request and response formats, and send requests to the API.
+
+For endpoints that require authentication, obtain a valid access token through the login endpoint and provide it using Swagger's Authorize feature.
+
+Testing
+
+The RaceDay.Api.Tests project is intended for automated testing.
+
+To run the tests from the solution directory, execute:
+
+dotnet test
+
+Review the test results to confirm that the tests pass.
+
+Version Control
+
+Git is used to track changes during development. The source code can be hosted on GitHub, where commits document the implementation and development progress.
+
+Author
+
+Developed as part of the PROG6212 Programming 2B Portfolio of Evidence.
+
+Project Status
+
+The project is under development. Features, endpoints, authentication, database operations, and automated tests should be verified before the final submission
