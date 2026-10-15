@@ -32,3 +32,27 @@ RaceDay.Contracts — Contains request and response DTOs used to exchange data w
 RaceDay.Api.Tests — Contains automated tests for the API.
 
 Main Features
+
+The planned functionality includes:
+
+User registration and login.
+
+Organiser and Participant roles.
+
+Viewing and updating user profiles.
+
+Creating, viewing, updating, and deleting race events.
+
+Browsing event categories.
+
+Enrolling Participants in events.
+
+Managing enrolments.
+
+Recording and viewing race results.
+
+API documentation through Swagger.
+
+Automated testing.
+
+Features should be considered complete once they have been implemented and tested successfully.
