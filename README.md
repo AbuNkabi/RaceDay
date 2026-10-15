@@ -60,5 +60,37 @@ For security, do not commit passwords, private keys, access tokens, or other sen
 API documentation through Swagger.
 
 Automated testing.
+Getting Started
 
+Prerequisites
+
+Ensure that the following are installed:
+
+Visual Studio 2022
+
+.NET 8 SDK
+
+SQL Server Express
+
+SQL Server Management Studio (SSMS), if required for database management
+
+Git
+
+Setup Instructions
+
+Clone or download the repository.
+
+Open the RaceDay.sln solution in Visual Studio 2022.
+
+Check the SQL Server connection string in RaceDay.Api/appsettings.json.
+
+Ensure that SQL Server Express is running and that the configured database is accessible.
+
+Open the Package Manager Console or a terminal in the solution directory.
+
+Apply the Entity Framework Core migrations to create or update the database.
+
+Build the solution.
+
+Run the RaceDay.Api project.
 Features should be considered complete once they have been implemented and tested successfully.
