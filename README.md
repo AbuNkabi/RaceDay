@@ -89,6 +89,8 @@ API documentation through Swagger.
 
 The RaceDay REST API follows a structured architecture that separates application functionality into different components. This improves code organisation, maintainability, and the ability to test individual features.
 
+The API project handles incoming HTTP requests through controllers. These controllers process requests, interact with the application's data access components, and return appropriate HTTP responses.
+
 
 
 
