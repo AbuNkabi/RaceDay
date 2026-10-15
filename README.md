@@ -91,8 +91,13 @@ The RaceDay REST API follows a structured architecture that separates applicatio
 
 The API project handles incoming HTTP requests through controllers. These controllers process requests, interact with the application's data access components, and return appropriate HTTP responses.
 
+Entity classes represent the application's data, while Entity Framework Core manages communication with the SQL Server database.
 
+The RaceDay.Contracts project contains Data Transfer Objects (DTOs) used to define the information accepted by the API and returned to clients. This helps prevent database entities from being exposed directly and allows request and response formats to be managed independently.
 
+The RaceDay.Api.Tests project is responsible for automated testing. It helps verify that implemented features behave as expected and that changes do not introduce unintended errors.
+
+This separation of responsibilities makes the application easier to maintain, extend, and test as additional functionality is introduced.
 
 Automated testing.
 Getting Started
