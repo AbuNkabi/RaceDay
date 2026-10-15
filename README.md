@@ -20,3 +20,15 @@ Swagger / OpenAPI
 xUnit for automated testing
 
 Git and GitHub for version control
+
+Solution Structure
+
+The solution contains the following projects:
+
+RaceDay.Api — Contains the API controllers, models, database context, authentication configuration, and application setup.
+
+RaceDay.Contracts — Contains request and response DTOs used to exchange data with the API.
+
+RaceDay.Api.Tests — Contains automated tests for the API.
+
+Main Features
