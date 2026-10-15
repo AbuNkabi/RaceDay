@@ -94,3 +94,11 @@ Build the solution.
 
 Run the RaceDay.Api project.
 Features should be considered complete once they have been implemented and tested successfully.
+
+Running Database Migrations
+
+If the database has not yet been created or updated, use the following command from the solution directory, adjusting the project paths if necessary:
+
+dotnet ef database update --project RaceDay.Api --startup-project RaceDay.Api
+
+Ensure the EF Core tools are installed before running this command.
