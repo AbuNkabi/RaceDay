@@ -85,6 +85,13 @@ The database is named RaceDayDb. The connection string is configured in appsetti
 For security, do not commit passwords, private keys, access tokens, or other sensitive configuration values to the repository.
 API documentation through Swagger.
 
+## API Architecture
+
+The RaceDay REST API follows a structured architecture that separates application functionality into different components. This improves code organisation, maintainability, and the ability to test individual features.
+
+
+
+
 Automated testing.
 Getting Started
 
