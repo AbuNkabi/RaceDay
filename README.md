@@ -132,3 +132,27 @@ Developed as part of the PROG6212 Programming 2B Portfolio of Evidence.
 Project Status
 
 The project is under development. Features, endpoints, authentication, database operations, and automated tests should be verified before the final submission
+
+## Project Objectives
+
+The main objective of the RaceDay REST API is to develop a reliable backend system for managing race events and participants. The application aims to provide a structured way for users to register, authenticate, manage their profiles, and participate in organised race events.
+
+The project focuses on applying the programming concepts and software development techniques covered in PROG6212 Programming 2B.
+
+The key objectives include:
+
+- Developing a RESTful API using ASP.NET Core Web API and C#.
+- Implementing secure user registration and login functionality.
+- Supporting Organiser and Participant roles.
+- Managing user profiles and personal information.
+- Providing CRUD operations for race events.
+- Allowing users to browse events and event categories.
+- Enabling Participants to enrol in race events.
+- Allowing Organisers to manage enrolments and record race results.
+- Using Entity Framework Core to interact with the SQL Server database.
+- Documenting API endpoints using Swagger/OpenAPI.
+- Implementing automated tests using xUnit.
+- Using Git and GitHub to track changes throughout development.
+
+The application will be developed in stages, with each feature implemented and tested before being considered complete.
+
