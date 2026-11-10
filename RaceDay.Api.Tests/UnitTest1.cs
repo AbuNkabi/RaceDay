@@ -8,7 +8,6 @@ public class ProfileDtoTests
     [Fact]
     public void ProfileDto_ShouldStoreProfileDetails()
     {
-        // Arrange
         var profile = new ProfileDto
         {
             UserId = 1,
@@ -18,7 +17,6 @@ public class ProfileDtoTests
             Role = "Participant"
         };
 
-        // Assert
         Assert.Equal(1, profile.UserId);
         Assert.Equal("John", profile.FirstName);
         Assert.Equal("Smith", profile.LastName);
