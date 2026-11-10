@@ -3,135 +3,130 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
-using RaceDay.Api.Models;
 
-namespace RaceDay.Api.Controllers
+namespace RaceDay.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class ResultsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class ResultsController : ControllerBase
+    private readonly RaceDayDbContext _context;
+
+    public ResultsController(RaceDayDbContext context)
     {
-        private readonly RaceDayDbContext _context;
+        _context = context;
+    }
 
-        public ResultsController(RaceDayDbContext context)
+    // GET: api/Results
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<RaceDay.Api.Models.Result>>> GetResults()
+    {
+        var results = await _context.Results
+            .AsNoTracking()
+            .ToListAsync();
+
+        return Ok(results);
+    }
+
+    // GET: api/Results/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<RaceDay.Api.Models.Result>> GetResult(int id)
+    {
+        var result = await _context.Results.FindAsync(id);
+
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    // POST: api/Results
+    [HttpPost]
+    [Authorize(Roles = "Organiser")]
+    public async Task<ActionResult<RaceDay.Api.Models.Result>> CreateResult(
+        RaceDay.Api.Models.Result result)
+    {
+        if (result.Time <= 0 || result.Position <= 0)
         {
-            _context = context;
+            return BadRequest(
+                "Time and position must be greater than zero.");
         }
 
-        // GET: api/Results
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<RaceDay.Api.Models.Result>>> GetResults()
-        {
-            var results = await _context.Results
-                .AsNoTracking()
-                .ToListAsync();
+        var enrolmentExists = await _context.Enrolments
+            .AnyAsync(e => e.EnrolmentId == result.EnrolmentId);
 
-            return Ok(results);
+        if (!enrolmentExists)
+        {
+            return BadRequest(
+                "The specified enrolment does not exist.");
         }
 
-        // GET: api/Results/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<RaceDay.Api.Models.Result>> GetResult(int id)
+        result.ResultId = 0;
+
+        _context.Results.Add(result);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(
+            nameof(GetResult),
+            new { id = result.ResultId },
+            result);
+    }
+
+    // PUT: api/Results/5
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Organiser")]
+    public async Task<IActionResult> UpdateResult(
+        int id, RaceDay.Api.Models.Result result)
+    {
+        if (id != result.ResultId)
         {
-            var result = await _context.Results.FindAsync(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return BadRequest(
+                "The ID in the URL must match ResultId.");
         }
 
-        // POST: api/Results
-        [HttpPost]
-        public async Task<ActionResult<RaceDay.Api.Models.Result>> CreateResult(RaceDay.Api.Models.Result result)
+        if (result.Time <= 0 || result.Position <= 0)
         {
-            if (result.Time <= 0 || result.Position <= 0)
-            {
-                return BadRequest(
-                    "Time and position must be greater than zero.");
-            }
-
-            var enrolmentExists = await _context.Enrolments
-                .AnyAsync(e => e.EnrolmentId == result.EnrolmentId);
-
-            if (!enrolmentExists)
-            {
-                return BadRequest(
-                    "The specified enrolment does not exist.");
-            }
-
-           ;
-
-            return CreatedAtAction(
-                nameof(GetResult),
-                new { id = result.ResultId },
-                result);
+            return BadRequest(
+                "Time and position must be greater than zero.");
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateResult(
-    int id, RaceDay.Api.Models.Result result)
+        var existingResult = await _context.Results.FindAsync(id);
+
+        if (existingResult == null)
+            return NotFound();
+
+        var enrolmentExists = await _context.Enrolments
+            .AnyAsync(e => e.EnrolmentId == result.EnrolmentId);
+
+        if (!enrolmentExists)
         {
-            if (id != result.ResultId)
-            {
-                return BadRequest(
-                    "The ID in the URL must match ResultId.");
-            }
-
-            // Keep the rest of your existing method below.
-
-            var existingResult = await _context.Results.FindAsync(id);
-
-            if (existingResult != null)
-            {
-            }
-            else
-            {
-                return NotFound();
-            }
-
-            if (result.Time <= 0 || result.Position <= 0)
-            {
-                return BadRequest(
-                    "Time and position must be greater than zero.");
-            }
-
-            var enrolmentExists = await _context.Enrolments
-                .AnyAsync(e => e.EnrolmentId == result.EnrolmentId);
-
-            if (!enrolmentExists)
-            {
-                return BadRequest(
-                    "The specified enrolment does not exist.");
-            }
-
-            existingResult.EnrolmentId = result.EnrolmentId;
-            existingResult.Time = (int)result.Time;
-            existingResult.Position = result.Position;
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return BadRequest(
+                "The specified enrolment does not exist.");
         }
 
-        // DELETE: api/Results/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResult(int id)
-        {
-            var result = await _context.Results.FindAsync(id);
+        existingResult.EnrolmentId = result.EnrolmentId;
+        existingResult.Time = result.Time;
+        existingResult.Position = result.Position;
 
-            if (result == null)
-            {
-                return NotFound();
-            }
+        await _context.SaveChangesAsync();
 
-            _context.Results.Remove(result);
-            await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
-            return NoContent();
-        }
+    // DELETE: api/Results/5
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Organiser")]
+    public async Task<IActionResult> DeleteResult(int id)
+    {
+        var result = await _context.Results.FindAsync(id);
+
+        if (result == null)
+            return NotFound();
+
+        _context.Results.Remove(result);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 }

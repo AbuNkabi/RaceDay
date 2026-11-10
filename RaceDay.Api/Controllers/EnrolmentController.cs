@@ -1,106 +1,154 @@
-﻿ 
+﻿
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.Models;
 
-namespace RaceDay.Api.Controllers
+namespace RaceDay.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class EnrolmentsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class EnrolmentsController : ControllerBase
+    private readonly RaceDayDbContext _context;
+
+    public EnrolmentsController(RaceDayDbContext context)
     {
-        private readonly RaceDayDbContext _context;
+        _context = context;
+    }
 
-        public EnrolmentsController(RaceDayDbContext context)
+    private int? GetCurrentUserId()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (int.TryParse(userId, out int id))
         {
-            _context = context;
+            return id;
         }
 
-        // GET: api/Enrolments
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Enrolment>>> GetEnrolments()
-        {
-            var enrolments = await _context.Enrolments
-                .AsNoTracking()
-                .ToListAsync();
+        return null;
+    }
 
-            return Ok(enrolments);
-        }
+    // GET: api/Enrolments
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Enrolment>>> GetEnrolments()
+    {
+        var userId = GetCurrentUserId();
 
-        // GET: api/Enrolments/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Enrolment>> GetEnrolment(int id)
-        {
-            var enrolment = await _context.Enrolments.FindAsync(id);
+        if (userId == null)
+            return Unauthorized();
 
-            if (enrolment == null)
-            {
-                return NotFound();
-            }
+        var enrolments = await _context.Enrolments
+            .AsNoTracking()
+            .Where(e => e.UserId == userId.Value)
+            .ToListAsync();
 
-            return Ok(enrolment);
-        }
+        return Ok(enrolments);
+    }
 
-        // POST: api/Enrolments
-        [HttpPost]
-        public async Task<ActionResult<Enrolment>> CreateEnrolment(
-            Enrolment enrolment)
-        {
-            _context.Enrolments.Add(enrolment);
-            await _context.SaveChangesAsync();
+    // GET: api/Enrolments/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Enrolment>> GetEnrolment(int id)
+    {
+        var userId = GetCurrentUserId();
 
-            return CreatedAtAction(
-                nameof(GetEnrolment),
-                new { id = enrolment.EnrolmentId },
-                enrolment);
-        }
+        if (userId == null)
+            return Unauthorized();
 
-        // PUT: api/Enrolments/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEnrolment(
-            int id, Enrolment enrolment)
-        {
-            if (id != enrolment.EnrolmentId)
-            {
-                return BadRequest(
-                    "The ID in the URL must match EnrolmentId.");
-            }
+        var enrolment = await _context.Enrolments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e =>
+                e.EnrolmentId == id && e.UserId == userId.Value);
 
-            var existingEnrolment =
-                await _context.Enrolments.FindAsync(id);
+        if (enrolment == null)
+            return NotFound();
 
-            if (existingEnrolment == null)
-            {
-                return NotFound();
-            }
+        return Ok(enrolment);
+    }
 
-            _context.Entry(existingEnrolment)
-                .CurrentValues.SetValues(enrolment);
+    // POST: api/Enrolments
+    [HttpPost]
+    public async Task<ActionResult<Enrolment>> CreateEnrolment(
+        Enrolment enrolment)
+    {
+        var userId = GetCurrentUserId();
 
-            await _context.SaveChangesAsync();
+        if (userId == null)
+            return Unauthorized();
 
-            return NoContent();
-        }
+        var eventExists = await _context.Events
+            .AnyAsync(e => e.EventId == enrolment.EventId);
 
-        // DELETE: api/Enrolments/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEnrolment(int id)
-        {
-            var enrolment = await _context.Enrolments.FindAsync(id);
+        if (!eventExists)
+            return BadRequest("The selected event does not exist.");
 
-            if (enrolment == null)
-            {
-                return NotFound();
-            }
+        enrolment.EnrolmentId = 0;
+        enrolment.UserId = userId.Value;
 
-            _context.Enrolments.Remove(enrolment);
-            await _context.SaveChangesAsync();
+        _context.Enrolments.Add(enrolment);
+        await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        return CreatedAtAction(
+            nameof(GetEnrolment),
+            new { id = enrolment.EnrolmentId },
+            enrolment);
+    }
+
+    // PUT: api/Enrolments/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateEnrolment(
+        int id, Enrolment enrolment)
+    {
+        var userId = GetCurrentUserId();
+
+        if (userId == null)
+            return Unauthorized();
+
+        var existingEnrolment = await _context.Enrolments
+            .FirstOrDefaultAsync(e =>
+                e.EnrolmentId == id && e.UserId == userId.Value);
+
+        if (existingEnrolment == null)
+            return NotFound();
+
+        if (id != enrolment.EnrolmentId)
+            return BadRequest("The URL ID must match EnrolmentId.");
+
+        var eventExists = await _context.Events
+            .AnyAsync(e => e.EventId == enrolment.EventId);
+
+        if (!eventExists)
+            return BadRequest("The selected event does not exist.");
+
+        existingEnrolment.EventId = enrolment.EventId;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    // DELETE: api/Enrolments/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteEnrolment(int id)
+    {
+        var userId = GetCurrentUserId();
+
+        if (userId == null)
+            return Unauthorized();
+
+        var enrolment = await _context.Enrolments
+            .FirstOrDefaultAsync(e =>
+                e.EnrolmentId == id && e.UserId == userId.Value);
+
+        if (enrolment == null)
+            return NotFound();
+
+        _context.Enrolments.Remove(enrolment);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 }
-
