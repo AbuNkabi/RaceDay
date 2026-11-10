@@ -1,0 +1,8 @@
+.raceday-nav { background: linear-gradient(90deg, #0d1b2a, #1b4965); }
+.event-card img, .event-card .placeholder-img { height: 180px; object-fit: cover; width: 100%; }
+.placeholder-img {
+    background: linear-gradient(135deg, #1b4965, #5fa8d3);
+    color: #fff; display: flex; align-items: center; justify-content: center; font-size: 3rem;
+}
+.hero { background: linear-gradient(135deg, #0d1b2a, #1b4965); color: #fff; border-radius: .75rem; }
+.event-hero-img { max-height: 340px; object-fit: cover; width: 100%; border-radius: .5rem; }

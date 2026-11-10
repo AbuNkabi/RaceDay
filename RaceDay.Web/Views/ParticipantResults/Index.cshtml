@@ -1,0 +1,32 @@
+@model List<MyRaceResultViewModel>
+@{ ViewData["Title"] = "My Results"; }
+
+<h1 class="h3 mb-3">My race results</h1>
+<p class="text-muted">Your recorded finishing times and positions.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You do not have any published results yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th></tr></thead>
+            <tbody>
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@result.EventId">@result.EventName</a>
+                    </td>
+                    <td>@result.EventDate.ToString("d MMM yyyy")</td>
+                    <td>@result.CategoryName</td>
+                    <td>@result.FormattedTime</td>
+                    <td>@result.Position</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

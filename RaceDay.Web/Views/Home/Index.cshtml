@@ -1,0 +1,33 @@
+@model List<EventModel>
+@inject ISessionService SessionSvc
+@{ ViewData["Title"] = "Home"; }
+
+<div class="hero p-5 mb-4 text-center">
+    <h1 class="display-5 fw-bold">Welcome to RaceDay</h1>
+    <p class="lead">Discover races, enrol in seconds and follow the results.</p>
+    <a class="btn btn-warning btn-lg me-2" asp-controller="Events" asp-action="Index">Browse events</a>
+    @if (!SessionSvc.IsAuthenticated)
+    {
+        <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Register">Join now</a>
+    }
+</div>
+
+@if (ViewBag.ApiError != null)
+{
+    <div class="alert alert-warning">@ViewBag.ApiError</div>
+}
+
+<h2 class="h4 mb-3">Upcoming events</h2>
+@if (!Model.Any())
+{
+    <p class="text-muted">No upcoming events yet. Check back soon!</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var e in Model)
+        {
+            <div class="col"><partial name="_EventCard" model="e" /></div>
+        }
+    </div>
+}

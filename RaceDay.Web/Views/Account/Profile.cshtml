@@ -1,0 +1,39 @@
+@model ProfileViewModel
+@{ ViewData["Title"] = "My Profile"; }
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3">My profile</h2>
+                @if (!string.IsNullOrEmpty(Model.ProfileImageUrl)) {
+                    <img src="@Url.Action("Profile", "Media")" alt="Profile picture" class="rounded-circle mb-3" width="120" height="120" style="object-fit:cover" />
+                }
+                <form asp-action="UploadImage" method="post" enctype="multipart/form-data" class="mb-4">
+                    <label class="form-label" for="image">Profile image (JPG, PNG or WEBP, up to 5 MB)</label>
+                    <input type="file" id="image" name="image" class="form-control mb-2" accept="image/jpeg,image/png,image/webp" required />
+                    <button class="btn btn-outline-primary">Upload picture</button>
+                </form>
+                <form asp-action="Profile" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Role" />
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <input class="form-control" value="@Model.Role" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

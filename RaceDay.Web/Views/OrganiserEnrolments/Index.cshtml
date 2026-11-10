@@ -1,0 +1,18 @@
+@model List<EventEnrolmentModel>
+@{ ViewData["Title"] = "Event Enrolments"; int eventId = (int)ViewBag.EventId; }
+<h1 class="h3">Enrolments: @ViewBag.EventName</h1>
+@if (!Model.Any()) { <p>No participants enrolled yet.</p> }
+else {
+<table class="table table-striped"><thead><tr><th>Participant</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody>
+@foreach(var en in Model) {
+<tr><td>@en.ParticipantName</td><td>@en.Email</td><td>@en.Status</td><td>
+@if(en.Status != "Confirmed") {
+<form asp-action="SetStatus" method="post" class="d-inline"><input type="hidden" name="eventId" value="@eventId"/><input type="hidden" name="enrolmentId" value="@en.EnrolmentId"/><input type="hidden" name="status" value="Confirmed"/><button class="btn btn-sm btn-success">Confirm</button></form>
+}
+@if(en.Status != "Rejected") {
+<form asp-action="SetStatus" method="post" class="d-inline"><input type="hidden" name="eventId" value="@eventId"/><input type="hidden" name="enrolmentId" value="@en.EnrolmentId"/><input type="hidden" name="status" value="Rejected"/><button class="btn btn-sm btn-outline-danger">Reject</button></form>
+}
+</td></tr>
+}
+</tbody></table>
+}

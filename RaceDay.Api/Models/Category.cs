@@ -1,0 +1,12 @@
+namespace RaceDay.Api.Models;
+
+public class Category
+{
+    public int CategoryId { get; set; }
+
+    public string CategoryName { get; set; } = string.Empty;
+
+    public string Description { get; set; } = string.Empty;
+    public decimal EntryFee { get; set; }
+    public int MaximumParticipants { get; set; } = 100;
+}

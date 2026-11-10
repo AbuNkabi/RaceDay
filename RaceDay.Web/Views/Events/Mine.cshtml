@@ -1,0 +1,50 @@
+@model List<EventModel>
+@{ ViewData["Title"] = "My Events"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">My events</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Create event</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You haven't created any events yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle table-hover">
+            <thead>
+                <tr><th></th><th>Event</th><th>Date</th><th>Location</th><th class="text-end">Actions</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td style="width:70px">
+                        @if (!string.IsNullOrEmpty(e.ImageUrl))
+                        {
+                            <img src="@Url.Action("Event", "Media", new { id = e.EventId })" alt="" width="60" height="45" style="object-fit:cover" class="rounded" />
+                        }
+                        else { <span class="fs-3">🏃</span> }
+                    </td>
+                    <td><a asp-action="Details" asp-route-id="@e.EventId">@e.EventName</a></td>
+                    <td>@e.EventDate.ToString("d MMM yyyy HH:mm")</td>
+                    <td>@e.Location</td>
+                    <td class="text-end">
+                        <a asp-controller="Categories" asp-action="Index" asp-route-eventId="@e.EventId" class="btn btn-sm btn-outline-primary">Categories</a>
+                        <a asp-controller="OrganiserEnrolments" asp-action="Index" asp-route-eventId="@e.EventId" class="btn btn-sm btn-outline-primary">Enrolments</a>
+                        <a asp-controller="Results" asp-action="Manage" asp-route-eventId="@e.EventId"
+                           class="btn btn-sm btn-outline-success">Results</a>
+                        <a asp-action="Edit" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@e.EventId" method="post" class="d-inline"
+                              onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

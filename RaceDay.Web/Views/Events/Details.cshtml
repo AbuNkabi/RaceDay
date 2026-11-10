@@ -1,0 +1,99 @@
+@model EventDetailsViewModel
+@inject ISessionService SessionSvc
+@{
+    ViewData["Title"] = Model.Event.EventName;
+    var isOwner = SessionSvc.IsOrganiser && SessionSvc.CurrentUser!.UserId == Model.Event.OrganiserId;
+}
+
+<a asp-action="Index" class="text-decoration-none">&larr; Back to events</a>
+
+<div class="row mt-3 g-4">
+    <div class="col-lg-7">
+        @if (!string.IsNullOrEmpty(Model.Event.ImageUrl))
+        {
+            <img src="@Url.Action("Event", "Media", new { id = Model.Event.EventId })" alt="@Model.Event.EventName" class="event-hero-img mb-3" />
+        }
+        <h1 class="h2">@Model.Event.EventName</h1>
+        <p class="text-muted mb-1">📅 @Model.Event.EventDate.ToString("dddd, d MMMM yyyy HH:mm")</p>
+        <p class="text-muted">📍 @Model.Event.Location</p>
+        <p style="white-space: pre-line">@Model.Event.Description</p>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                @if (!SessionSvc.IsAuthenticated)
+                {
+                    <p class="mb-2">Log in as a participant to enrol in this event.</p>
+                    <a asp-controller="Account" asp-action="Login"
+                       asp-route-returnUrl="@Url.Action("Details", "Events", new { id = Model.Event.EventId })"
+                       class="btn btn-primary">Log in</a>
+                }
+                else if (SessionSvc.IsParticipant)
+                {
+                    if (Model.IsEnrolled)
+                    {
+                        <div class="alert alert-success mb-0">✅ You are enrolled in this event.</div>
+                    }
+                    else
+                    {
+                        <form asp-action="Enrol" asp-route-id="@Model.Event.EventId" method="post">
+                            @if (Model.Categories.Any())
+                            {
+                                <label for="categoryId" class="form-label">Select category</label>
+                                <select name="categoryId" id="categoryId" class="form-select mb-2" required>
+                                    <option value="">Choose a category</option>
+                                    @foreach (var c in Model.Categories)
+                                    { <option value="@c.CategoryId">@c.CategoryName - R @c.EntryFee.ToString("0.00")</option> }
+                                </select>
+                            }
+                            else { <p class="text-muted">No categories published yet.</p> }
+                            <button type="submit" class="btn btn-success w-100">Enrol now</button>
+                        </form>
+                    }
+                }
+                else if (isOwner)
+                {
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Event.EventId" class="btn btn-outline-primary">Edit event</a>
+                        <a asp-controller="Categories" asp-action="Index" asp-route-eventId="@Model.Event.EventId" class="btn btn-outline-primary">Categories</a>
+                        <a asp-controller="OrganiserEnrolments" asp-action="Index" asp-route-eventId="@Model.Event.EventId" class="btn btn-outline-primary">Enrolments</a>
+                        <a asp-controller="Results" asp-action="Manage" asp-route-eventId="@Model.Event.EventId"
+                           class="btn btn-primary">Manage enrolments &amp; results</a>
+                    </div>
+                }
+                else
+                {
+                    <p class="mb-0 text-muted">You are viewing this event as an organiser.</p>
+                }
+            </div>
+        </div>
+
+        @if (SessionSvc.IsAuthenticated)
+        {
+            <div class="card shadow-sm">
+                <div class="card-header">Results</div>
+                @if (!Model.Results.Any())
+                {
+                    <div class="card-body text-muted">No results have been published yet.</div>
+                }
+                else
+                {
+                    <table class="table table-sm mb-0">
+                        <thead><tr><th>#</th><th>Participant</th><th>Time</th></tr></thead>
+                        <tbody>
+                        @foreach (var r in Model.Results)
+                        {
+                            <tr>
+                                <td>@r.Position</td>
+                                <td>@r.ParticipantName</td>
+                                <td>@r.FormattedTime</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        }
+    </div>
+</div>

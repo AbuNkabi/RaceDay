@@ -1,0 +1,40 @@
+# Build and IDE outputs
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Secrets and per-machine settings (do not commit)
+.env
+.env.*
+!.env.example
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+*.pfx
+*.publishsettings
+
+# OS files
+.DS_Store
+Thumbs.db
+# Private documents and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+*.secret
+*credentials*
+*password*
+*private*
+*token*
+*secret*
+
+# Private backup files
+*.bak
+*.backup
+*.sql
