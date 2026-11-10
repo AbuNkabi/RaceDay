@@ -1,203 +1,210 @@
-Abulele NKABI st10483049
-PROG Part 2
+# RaceDay REST API
 
+**Student:** Abulele Nkabi  
+**Student Number:** ST10483049  
+**Module:** PROG6212 – Programming 2B  
+**Portfolio:** Part 2
 
-RaceDay REST API 
+## 1. Project Overview
 
-Project Overview
+RaceDay is a RESTful Web API developed for the PROG6212 Programming 2B Portfolio of Evidence. The system supports race event management by allowing users to register, authenticate, manage profiles, browse events, enrol in events and access race results according to their roles.
 
-RaceDay is a RESTful Web API developed for the PROG6212 Programming 2B Portfolio of Evidence (PoE). The system is designed to support race event management by allowing users to register, manage profiles, browse events, enrol in events, and access race results according to their roles.
+The API is developed using ASP.NET Core Web API with C# and .NET 8. Microsoft SQL Server Express is used for data storage.
 
-The API is developed using ASP.NET Core Web API with C# and .NET 8, with Microsoft SQL Server used for data storage.
-Technologies Used
+## 2. Technologies Used
 
-## Project Objectives
+- C#
+- ASP.NET Core Web API (.NET 8)
+- Entity Framework Core 8
+- Microsoft SQL Server Express
+- Swagger / OpenAPI
+- xUnit
+- Git and GitHub
+- GitHub Actions
 
-The main objective of the RaceDay REST API is to develop a reliable backend system for managing race events and participants. The application aims to provide a structured way for users to register, authenticate, manage their profiles, and participate in organised race events.
+## 3. Project Objectives
 
-The project focuses on applying the programming concepts and software development techniques covered in PROG6212 Programming 2B.
+The main objective of RaceDay is to provide a structured backend system for managing race events and participants.
 
-The key objectives include:
+The project demonstrates the following programming and software development concepts:
 
-- Developing a RESTful API using ASP.NET Core Web API and C#.
-- Implementing secure user registration and login functionality.
+- Developing a RESTful API using ASP.NET Core Web API.
+- Implementing user registration and login.
 - Supporting Organiser and Participant roles.
-- Managing user profiles and personal information.
+- Implementing authentication and role-based authorisation.
+- Managing user profiles.
 - Providing CRUD operations for race events.
-- Allowing users to browse events and event categories.
-- Enabling Participants to enrol in race events.
-- Allowing Organisers to manage enrolments and record race results.
-- Using Entity Framework Core to interact with the SQL Server database.
-- Documenting API endpoints using Swagger/OpenAPI.
+- Enabling users to browse available events.
+- Supporting participant enrolments.
+- Managing race results.
+- Using Entity Framework Core to communicate with SQL Server.
+- Documenting API endpoints using Swagger.
 - Implementing automated tests using xUnit.
-- Using Git and GitHub to track changes throughout development.
+- Tracking development using Git and GitHub.
 
-  
-The application will be developed in stages, with each feature implemented and tested before being considered complete.
+## 4. Solution Structure
 
+The solution contains three projects:
 
+- **RaceDay.Api** – Contains the API controllers, database models, database context, authentication configuration, migrations and application setup.
+- **RaceDay.Contracts** – Contains the request and response Data Transfer Objects (DTOs) used to exchange information with the API.
+- **RaceDay.Api.Tests** – Contains automated tests for the application.
 
-C#
+## 5. Main Features
 
-ASP.NET Core Web API (.NET 8)
+The API includes the following functionality:
 
-Entity Framework Core 8
+- User registration and login.
+- JWT-based authentication.
+- Organiser and Participant roles.
+- Profile viewing and updating.
+- Public event browsing.
+- Organiser event creation, updating and deletion.
+- Viewing events created by the authenticated Organiser.
+- Participant enrolment management.
+- Race result management.
+- Role-based access to protected API endpoints.
 
-Microsoft SQL Server Express
+Organisers can manage their own events, while authenticated users can access protected functionality according to their permissions.
 
-Swagger / OpenAPI
+## 6. API Architecture
 
-xUnit for automated testing
+RaceDay follows a structured architecture that separates application responsibilities into different components.
 
-Git and GitHub for version control
+The **API controllers** handle incoming HTTP requests, process application operations and return appropriate HTTP responses.
 
-Solution Structure
+The **Models** represent the application's database entities.
 
-The solution contains the following projects:
+The **RaceDayDbContext** provides access to the database through Entity Framework Core.
 
-RaceDay.Api — Contains the API controllers, models, database context, authentication configuration, and application setup.
+The **Contracts** project contains DTOs that define the information accepted and returned by the API. This separates API request and response structures from database entities.
 
-RaceDay.Contracts — Contains request and response DTOs used to exchange data with the API.
+The **Migrations** folder contains Entity Framework Core database migrations used to create and update the database schema.
 
-RaceDay.Api.Tests — Contains automated tests for the API.
+The **Tests** project verifies selected application functionality through automated tests.
 
-Main Features
+## 7. Database
 
-The planned functionality includes:
+The application uses Microsoft SQL Server Express with Entity Framework Core 8.
 
-User registration and login.
+The database is named `RaceDayDb`.
 
-Organiser and Participant roles.
+The database connection string and JWT signing key are configured using development secrets or environment-specific configuration. Sensitive values such as passwords, signing keys and access tokens must not be committed to GitHub.
 
-Viewing and updating user profiles.
+### Database migrations
 
-Creating, viewing, updating, and deleting race events.
+The project uses Entity Framework Core migrations to manage database changes.
 
-Browsing event categories.
+To apply migrations, open a terminal in the solution directory and run:
 
-Enrolling Participants in events.
-
-Managing enrolments.
-
-Recording and viewing race results.
-Database
-
-The application uses Microsoft SQL Server Express and Entity Framework Core.
-
-The database is named RaceDayDb. The connection string is configured in appsettings.json.
-
-For security, do not commit passwords, private keys, access tokens, or other sensitive configuration values to the repository.
-API documentation through Swagger.
-
-## API Architecture
-
-The RaceDay REST API follows a structured architecture that separates application functionality into different components. This improves code organisation, maintainability, and the ability to test individual features.
-
-The API project handles incoming HTTP requests through controllers. These controllers process requests, interact with the application's data access components, and return appropriate HTTP responses.
-
-Entity classes represent the application's data, while Entity Framework Core manages communication with the SQL Server database.
-
-The RaceDay.Contracts project contains Data Transfer Objects (DTOs) used to define the information accepted by the API and returned to clients. This helps prevent database entities from being exposed directly and allows request and response formats to be managed independently.
-
-The RaceDay.Api.Tests project is responsible for automated testing. It helps verify that implemented features behave as expected and that changes do not introduce unintended errors.
-
-This separation of responsibilities makes the application easier to maintain, extend, and test as additional functionality is introduced.
-
-Automated testing.
-Getting Started
-
-Prerequisites
-
-Ensure that the following are installed:
-
-Visual Studio 2022
-
-.NET 8 SDK
-
-SQL Server Express
-
-SQL Server Management Studio (SSMS), if required for database management
-
-Git
-
-Setup Instructions
-
-Clone or download the repository.
-
-Open the RaceDay.sln solution in Visual Studio 2022.
-
-Check the SQL Server connection string in RaceDay.Api/appsettings.json.
-
-Ensure that SQL Server Express is running and that the configured database is accessible.
-
-Open the Package Manager Console or a terminal in the solution directory.
-
-Apply the Entity Framework Core migrations to create or update the database.
-
-Build the solution.
-
-Run the RaceDay.Api project.
-Features should be considered complete once they have been implemented and tested successfully.
-
-Running Database Migrations
-
-If the database has not yet been created or updated, use the following command from the solution directory, adjusting the project paths if necessary:
-
+```bash
 dotnet ef database update --project RaceDay.Api --startup-project RaceDay.Api
+```
 
-Ensure the EF Core tools are installed before running this command.
+Ensure that the .NET Entity Framework Core tools are installed and that the SQL Server connection settings are configured before running this command.
 
-Using Swagger
+## 8. Getting Started
 
-When the API is running, open the Swagger UI at the address displayed in the application's launch settings or console output.
+### Prerequisites
 
-Swagger allows users to inspect available endpoints, view request and response formats, and send requests to the API.
+Install the following software:
 
-For endpoints that require authentication, obtain a valid access token through the login endpoint and provide it using Swagger's Authorize feature.
+- Visual Studio 2022
+- .NET 8 SDK
+- SQL Server Express
+- SQL Server Management Studio (SSMS), if required
+- Git
 
-Testing
+### Setup instructions
 
-The RaceDay.Api.Tests project is intended for automated testing.
+1. Clone or download the repository.
+2. Open `RaceDay.sln` in Visual Studio 2022.
+3. Ensure that SQL Server Express is running.
+4. Configure the database connection string and JWT signing key using User Secrets or environment-specific configuration.
+5. Apply the Entity Framework Core migrations.
+6. Build the solution.
+7. Run the `RaceDay.Api` project.
 
-To run the tests from the solution directory, execute:
+### Configure development secrets
 
-dotnet test
+From the solution directory, configure the database connection string and JWT key using the .NET User Secrets feature.
 
-Review the test results to confirm that the tests pass.
+Example commands (replace the placeholders with your own values):
 
-Version Control
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_SQL_SERVER_CONNECTION_STRING" --project RaceDay.Api
 
-Git is used to track changes during development. The source code can be hosted on GitHub, where commits document the implementation and development progress.
+dotnet user-secrets set "Jwt:Key" "YOUR_SECURE_JWT_SIGNING_KEY" --project RaceDay.Api
+```
 
-Author
+Do not use the example placeholders as actual credentials.
 
-Developed as part of the PROG6212 Programming 2B Portfolio of Evidence.
+## 9. Using Swagger
 
-Project Status
+When the API is running, open the Swagger UI using the address displayed by the application.
 
-The project is under development. Features, endpoints, authentication, database operations, and automated tests should be verified before the final submission
+Swagger provides an interface for:
 
- Project Objectives
+- Viewing available API endpoints.
+- Inspecting request and response formats.
+- Sending HTTP requests.
+- Testing authentication-protected endpoints.
 
-The main objective of the RaceDay REST API is to develop a reliable backend system for managing race events and participants. The application aims to provide a structured way for users to register, authenticate, manage their profiles, and participate in organised race events.
+To access protected endpoints:
 
-The project focuses on applying the programming concepts and software development techniques covered in PROG6212 Programming 2B.
+1. Register a user using the registration endpoint.
+2. Log in using the login endpoint.
+3. Copy the returned JWT access token.
+4. Select **Authorize** in Swagger.
+5. Enter the token using the format expected by the Swagger configuration.
+6. Test the protected endpoints according to the user's role.
 
-The key objectives include:
+## 10. Automated Testing
 
-- Developing a RESTful API using ASP.NET Core Web API and C#.
-- Implementing secure user registration and login functionality.
-- Supporting Organiser and Participant roles.
-- Managing user profiles and personal information.
-- Providing CRUD operations for race events.
-- Allowing users to browse events and event categories.
-- Enabling Participants to enrol in race events.
-- Allowing Organisers to manage enrolments and record race results.
-- Using Entity Framework Core to interact with the SQL Server database.
-- Documenting API endpoints using Swagger/OpenAPI.
-- Implementing automated tests using xUnit.
-- Using Git and GitHub to track changes throughout development.
+The project uses xUnit for automated testing.
 
-The application will be developed in stages, with each feature implemented and tested before being considered complete.
-Youtube link down below:
-https://youtu.be/tEhAEbx6l-w?si=w8cgeLkU6BnJqVyv
+To execute the tests, open a terminal in the solution directory and run:
+
+```bash
+dotnet test RaceDay.sln
+```
+
+To build the complete solution, run:
+
+```bash
+dotnet build RaceDay.sln
+```
+
+The automated tests cover selected DTO and authentication functionality.
+
+## 11. Continuous Integration
+
+GitHub Actions is configured to automatically restore dependencies, build the solution and execute automated tests when changes are pushed to the configured branches or when pull requests are created.
+
+This helps verify that the solution builds and that the automated tests pass.
+
+## 12. Version Control
+
+Git is used to track changes throughout development.
+
+The source code is hosted on GitHub:
+
+[RaceDay GitHub Repository](https://github.com/AbuNkabi/RaceDay)
+
+The repository contains the solution projects, application source code, tests, database migrations and GitHub Actions workflow.
+
+## 13. Video Presentation
+
+The project demonstration and presentation can be viewed using the following link:
+
+[Watch the RaceDay Video Presentation](https://youtu.be/tEhAEbx6l-w?si=w8cgeLkU6BnJqVy)
+
+## 14. Author
+
+**Abulele Nkabi**  
+**Student Number:** ST10483049  
+**Module:** PROG6212 – Programming 2B
+
+## 15. Project Status
+
+The RaceDay REST API implementation has been completed for this portfolio submission. The solution has been built and tested locally, and the GitHub Actions workflow has successfully completed its build and automated test process.
